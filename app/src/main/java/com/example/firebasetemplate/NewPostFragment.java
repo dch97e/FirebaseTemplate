@@ -38,8 +38,10 @@ public class NewPostFragment extends AppFragment {
         binding.previsualizacion.setOnClickListener(v -> galeria.launch("image/*"));
 
         appViewModel.uriImagenSeleccionada.observe(getViewLifecycleOwner(), uri -> {
-            Glide.with(this).load(uri).into(binding.previsualizacion);
-            uriImagen = uri;
+            if (uri!= null) {
+                Glide.with(this).load(uri).into(binding.previsualizacion);
+                uriImagen = uri;
+            }
         });
 
         binding.publicar.setOnClickListener(v -> {
@@ -59,8 +61,10 @@ public class NewPostFragment extends AppFragment {
                         FirebaseFirestore.getInstance().collection("posts")
                                 .add(post)
                                 .addOnCompleteListener(task -> {
+                                    appViewModel.setUriImagenSeleccionada(uriImagen);
                                     binding.publicar.setEnabled(true);
                                     navController.popBackStack();
+
                                 });
                     });
 
@@ -68,7 +72,6 @@ public class NewPostFragment extends AppFragment {
         });
     }
 
-    private final ActivityResultLauncher<String> galeria = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-        appViewModel.setUriImagenSeleccionada(uri);
-    });
+    private final ActivityResultLauncher<String> galeria = registerForActivityResult(
+            new ActivityResultContracts.GetContent(), uri -> appViewModel.setUriImagenSeleccionada(uri));
 }

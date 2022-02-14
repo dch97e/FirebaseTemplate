@@ -50,7 +50,7 @@
                 android:id="@+id/favorito"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@drawable/like_off"
+                android:button="@drawable/like"
                 app:useMaterialThemeColors="false"
                 android:paddingLeft="8sp"/>
         </LinearLayout>
