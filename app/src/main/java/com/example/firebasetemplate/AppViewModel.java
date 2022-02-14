@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+
 public class AppViewModel extends AndroidViewModel {
     public AppViewModel(@NonNull Application application) {
         super(application);

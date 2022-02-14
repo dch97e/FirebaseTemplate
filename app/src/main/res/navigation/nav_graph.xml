@@ -26,7 +26,11 @@
         android:id="@+id/registerFragment"
         android:name="com.example.firebasetemplate.RegisterFragment"
         android:label="Register"
-        tools:layout="@layout/fragment_register" />
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_registerFragment_to_postsHomeFragment"
+            app:destination="@id/navigation"/>
+    </fragment>
     <fragment
         android:id="@+id/signOutFragment"
         android:name="com.example.firebasetemplate.SignOutFragment"
