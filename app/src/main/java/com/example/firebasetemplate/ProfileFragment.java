@@ -1,18 +1,18 @@
 package com.example.firebasetemplate;
 
+
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.firebasetemplate.databinding.FragmentPostsBinding;
-import com.example.firebasetemplate.databinding.FragmentProfileBinding;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.example.firebasetemplate.databinding.FragmentProfileBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileFragment extends AppFragment {
     private FragmentProfileBinding binding;
@@ -26,5 +26,16 @@ public class ProfileFragment extends AppFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
+            if (firebaseAuth.getCurrentUser() != null) {
+                Glide.with(this).load(firebaseAuth.getCurrentUser().getPhotoUrl()).circleCrop().into(binding.profileImage);
+                binding.emailProf.setText(firebaseAuth.getCurrentUser().getEmail());
+                binding.nameProf.setText(firebaseAuth.getCurrentUser().getDisplayName());
+                /*navHeaderMainBinding.name.setText(firebaseAuth.getCurrentUser().getDisplayName());
+                navHeaderMainBinding.email.setText(firebaseAuth.getCurrentUser().getEmail());
+                Log.e("sdfdfs","USER:" + firebaseAuth.getCurrentUser().getEmail());*/
+            }
+        });
     }
+
 }

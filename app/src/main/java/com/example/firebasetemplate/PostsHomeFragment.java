@@ -41,6 +41,7 @@ public class PostsHomeFragment extends AppFragment {
         binding.postsRecyclerView.setAdapter(adapter = new PostsAdapter());
 
        setQuery().addSnapshotListener((collectionSnapshot, e) -> {
+           postsList.clear();
             for (DocumentSnapshot documentSnapshot: collectionSnapshot) {
                 Post post = documentSnapshot.toObject(Post.class);
                 post.postid=documentSnapshot.getId();
