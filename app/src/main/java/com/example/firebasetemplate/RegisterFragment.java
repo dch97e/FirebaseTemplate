@@ -1,22 +1,38 @@
 package com.example.firebasetemplate;
 
+import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.firebasetemplate.databinding.FragmentRegisterBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.FirebaseStorage;
+
+import java.util.UUID;
 
 
 public class RegisterFragment extends AppFragment {
     private FragmentRegisterBinding binding;
+    private Uri uriImagen;
+    private Uri downloadUriImagen;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,24 +43,74 @@ public class RegisterFragment extends AppFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+//        binding.verifyEmailButton.setOnClickListener(v -> {
+//
+//        });
+        binding.imageRegister.setOnClickListener(v -> galeria.launch("image/*"));
+
+        appViewModel.uriImagenSeleccionada.observe(getViewLifecycleOwner(), uri -> {
+            Glide.with(this).load(uri).into(binding.imageRegister);
+            uriImagen = uri;
+        });
 
         binding.createAccountButton.setOnClickListener(v -> {
-            if (binding.passwordEditText.getText().toString().isEmpty()) {
-                binding.passwordEditText.setError("Required");
+            if (binding.nameEditText.getText().toString().isEmpty()) {
+                binding.nameEditText.setError("Required name.");
                 return;
             }
-            FirebaseAuth.getInstance()
-                    .createUserWithEmailAndPassword(
-                            binding.emailEditText.getText().toString(),
-                            binding.passwordEditText.getText().toString()
-                    ).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    navController.navigate(R.id.action_registerFragment_to_postsHomeFragment);
-                } else {
-                    Toast.makeText(requireContext(), task.getException().getLocalizedMessage(),
-                            Toast.LENGTH_SHORT).show();
+            if (binding.emailEditText.getText().toString().isEmpty()) {
+                binding.emailEditText.setError("Required email.");
+                return;
+            }
+            if (binding.passwordEditText.getText().toString().isEmpty()) {
+                binding.passwordEditText.setError("Required password.");
+                return;
+            }
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+                    binding.emailEditText.getText().toString(),
+                    binding.passwordEditText.getText().toString()
+            ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        // registro el usuario
+                        // subo la foto y obtengo su url
+                        FirebaseStorage.getInstance()
+                                .getReference("/images/"+ UUID.randomUUID()+".jpg")
+                                .putFile(uriImagen)
+                                .continueWithTask(task1 -> task1.getResult().getStorage().getDownloadUrl())
+                                .addOnSuccessListener(urlDescarga -> {
+                                    downloadUriImagen = urlDescarga;
+                                });
+                        // actualizo el perfil (nombre y foto)
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(binding.nameEditText.getText().toString())
+                                .setPhotoUri(downloadUriImagen)
+                                .build();
+                        user.updateProfile(profileUpdates)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d("asd", "User profile updated.");
+                                        }
+                                    }
+                                });
+
+                        navController.navigate(R.id.action_registerFragment_to_postsHomeFragment);
+                    } else {
+                        Log.d("FAIL", "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(requireContext(), task.getException().getLocalizedMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         });
     }
+
+
+    private final ActivityResultLauncher<String> galeria = registerForActivityResult(
+            new ActivityResultContracts.GetContent(), uri -> appViewModel.setUriImagenSeleccionada(uri));
 }

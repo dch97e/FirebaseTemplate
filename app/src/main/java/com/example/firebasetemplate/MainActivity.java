@@ -62,9 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
             if (firebaseAuth.getCurrentUser() != null) {
-                Glide.with(this).load(firebaseAuth.getCurrentUser().getPhotoUrl()).circleCrop().into(navHeaderMainBinding.photo);
+
                 navHeaderMainBinding.name.setText(firebaseAuth.getCurrentUser().getDisplayName());
                 navHeaderMainBinding.email.setText(firebaseAuth.getCurrentUser().getEmail());
+                Glide.with(this).load(firebaseAuth.getCurrentUser().getPhotoUrl()).circleCrop().into(navHeaderMainBinding.photo);
                 Log.e("sdfdfs","USER:" + firebaseAuth.getCurrentUser().getEmail());
             }
         });
