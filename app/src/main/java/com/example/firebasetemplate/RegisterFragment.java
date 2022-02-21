@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -48,7 +49,7 @@ public class RegisterFragment extends AppFragment {
 //        });
         binding.imageRegister.setOnClickListener(v -> galeria.launch("image/*"));
 
-        appViewModel.uriImagenSeleccionada.observe(getViewLifecycleOwner(), uri -> {
+        appViewModel.uriImagenPerfilSeleccionada.observe(getViewLifecycleOwner(), uri -> {
             Glide.with(this).load(uri).into(binding.imageRegister);
             uriImagen = uri;
         });
@@ -69,42 +70,34 @@ public class RegisterFragment extends AppFragment {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(
                     binding.emailEditText.getText().toString(),
                     binding.passwordEditText.getText().toString()
-            ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        // registro el usuario
-                        // subo la foto y obtengo su url
-                        FirebaseStorage.getInstance()
-                                .getReference("/images/"+ UUID.randomUUID()+".jpg")
-                                .putFile(uriImagen)
-                                .continueWithTask(task1 -> task1.getResult().getStorage().getDownloadUrl())
-                                .addOnSuccessListener(urlDescarga -> {
-                                    downloadUriImagen = urlDescarga;
-                                });
-                        // actualizo el perfil (nombre y foto)
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            ).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // registro el usuario
+                    // subo la foto y obtengo su url
+                    FirebaseStorage.getInstance()
+                            .getReference("/images/" + UUID.randomUUID() + ".jpg")
+                            .putFile(uriImagen)
+                            .continueWithTask(task1 -> task1.getResult().getStorage().getDownloadUrl())
+                            .addOnSuccessListener(urlDescarga -> {
+                                downloadUriImagen = urlDescarga;
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(binding.nameEditText.getText().toString())
-                                .setPhotoUri(downloadUriImagen)
-                                .build();
-                        user.updateProfile(profileUpdates)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d("asd", "User profile updated.");
-                                        }
-                                    }
-                                });
-
-                        navController.navigate(R.id.action_registerFragment_to_postsHomeFragment);
-                    } else {
-                        Log.d("FAIL", "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(requireContext(), task.getException().getLocalizedMessage(),
-                                Toast.LENGTH_LONG).show();
-                    }
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(binding.nameEditText.getText().toString())
+                                        .setPhotoUri(downloadUriImagen)
+                                        .build();
+                                user.updateProfile(profileUpdates)
+                                        .addOnCompleteListener(task12 -> {
+                                            if (task12.isSuccessful()) {
+                                                navController.navigate(R.id.action_registerFragment_to_postsHomeFragment);
+                                                Log.d("asd", "User profile updated.");
+                                            }
+                                        });
+                            });
+                } else {
+                    Log.d("FAIL", "createUserWithEmail:failure", task.getException());
+                    Toast.makeText(requireContext(), Objects.requireNonNull(task.getException()).getLocalizedMessage(),
+                            Toast.LENGTH_LONG).show();
                 }
             });
         });
@@ -112,5 +105,5 @@ public class RegisterFragment extends AppFragment {
 
 
     private final ActivityResultLauncher<String> galeria = registerForActivityResult(
-            new ActivityResultContracts.GetContent(), uri -> appViewModel.setUriImagenSeleccionada(uri));
+            new ActivityResultContracts.GetContent(), uri -> appViewModel.setUriImagenPerfilSeleccionada(uri));
 }
