@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="15dp"
     tools:context=".SignInFragment">
 
     <!--
@@ -27,19 +28,21 @@
 
     <LinearLayout
         android:id="@+id/signInForm"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
+
         <Button
             android:id="@+id/googleSignIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Google SignIn"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:text="Google SignIn" />
+
         <View
             android:id="@+id/divider"
             android:layout_width="409dp"
@@ -47,28 +50,35 @@
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
             android:background="?android:attr/listDivider" />
+
         <EditText
             android:id="@+id/email"
-            android:hint="Email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:id="@+id/password"
-            android:hint="Password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/emailSignIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Email" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password" />
+
+        <Button
+            android:id="@+id/emailSignIn"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:text="Email SignIn" />
+
         <TextView
             android:id="@+id/goToRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Don't have an account, register."
-            android:textSize="18sp"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textSize="18sp" />
     </LinearLayout>
 
 

@@ -67,15 +67,14 @@ public class PostsHomeFragment extends AppFragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             Post post = postsList.get(position);
-            holder.binding.contenido.setText(postsList.get(position).content);
-            holder.binding.autor.setText(postsList.get(position).authorName);
-            Glide.with(requireContext()).load(postsList.get(position).imageUrl).into(holder.binding.imagen);
+            holder.binding.contenido.setText(post.content);
+            holder.binding.autor.setText(post.authorName);
+            Glide.with(requireContext()).load(post.imageUrl).into(holder.binding.imagen);
+            Glide.with(requireContext()).load(post.imageUser).into(holder.binding.autorFoto);
 
-            holder.binding.favorito.setOnClickListener(view -> {
-                db.collection("posts").
-                        document(post.postid).
-                        update("likes."+auth.getUid(), !post.likes.containsValue(auth.getUid())? true : FieldValue.delete());
-            });
+            holder.binding.favorito.setOnClickListener(view -> db.collection("posts").
+                    document(post.postid).
+                    update("likes."+auth.getUid(), !post.likes.containsValue(auth.getUid())? true : FieldValue.delete()));
             holder.binding.favorito.setChecked(post.likes.containsKey(auth.getUid()));
         }
 

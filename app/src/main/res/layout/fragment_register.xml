@@ -8,7 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="15dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -19,38 +20,46 @@
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"/>
+            android:hint="Email" />
 
         <EditText
             android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"/>
+            android:hint="Password" />
 
         <EditText
             android:id="@+id/nameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="UserName" />
+
         <ImageView
             android:id="@+id/imageRegister"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_baseline_add_a_photo_24"/>
+            android:src="@drawable/ic_baseline_add_a_photo_24" />
 
 
         <Button
             android:id="@+id/createAccountButton"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="REGISTER"/>
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:text="REGISTER" />
 
         <Button
             android:id="@+id/verifyEmailButton"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="VERIFICAR EMAIL"/>
+            android:layout_gravity="center"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:text="VERIFICAR EMAIL" />
 
 
     </LinearLayout>

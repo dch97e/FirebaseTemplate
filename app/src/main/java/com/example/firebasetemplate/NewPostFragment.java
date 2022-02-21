@@ -57,14 +57,13 @@ public class NewPostFragment extends AppFragment {
                         post.authorName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
                         post.date = LocalDateTime.now().toString();
                         post.imageUrl = urlDescarga.toString();
-
+                        post.imageUser = auth.getCurrentUser().getPhotoUrl().toString();
                         FirebaseFirestore.getInstance().collection("posts")
                                 .add(post)
                                 .addOnCompleteListener(task -> {
                                     appViewModel.setUriImagenSeleccionada(uriImagen);
                                     binding.publicar.setEnabled(true);
                                     navController.popBackStack();
-
                                 });
                     });
 

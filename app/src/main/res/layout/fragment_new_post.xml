@@ -21,10 +21,11 @@
             android:id="@+id/contenido"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="top|left"
             android:hint="Write something..."
-            android:textSize="18sp"
             android:lines="4"
-            android:gravity="top|left">
+            android:textSize="18sp">
+
             <requestFocus />
         </EditText>
 

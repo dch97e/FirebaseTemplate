@@ -8,5 +8,6 @@ public class Post {
     public String date;
     public String imageUrl;
     public String postid;
+    public String imageUser;
     public HashMap<String, Boolean>  likes = new HashMap<>();
 }

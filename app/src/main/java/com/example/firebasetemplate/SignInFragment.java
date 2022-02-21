@@ -45,28 +45,22 @@ public class SignInFragment extends AppFragment {
 
         firebaseAuthWithGoogle(GoogleSignIn.getLastSignedInAccount(requireContext()));
 
-        binding.googleSignIn.setOnClickListener(view1 -> {
-            signInClient.launch(googleSignInClient.getSignInIntent());
-        });
+        binding.googleSignIn.setOnClickListener(view1 -> signInClient.launch(googleSignInClient.getSignInIntent()));
 
-        binding.emailSignIn.setOnClickListener(v -> {
-            FirebaseAuth.getInstance()
-                    .signInWithEmailAndPassword(
-                            binding.email.getText().toString(),
-                            binding.password.getText().toString()
-                    ).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    navController.navigate(R.id.action_signInFragment_to_postsHomeFragment);
-                } else {
-                    Toast.makeText(requireContext(), task.getException().getLocalizedMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
+        binding.emailSignIn.setOnClickListener(v -> FirebaseAuth.getInstance()
+                .signInWithEmailAndPassword(
+                        binding.email.getText().toString(),
+                        binding.password.getText().toString()
+                ).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                navController.navigate(R.id.action_signInFragment_to_postsHomeFragment);
+            } else {
+                Toast.makeText(requireContext(), task.getException().getLocalizedMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }));
 
-        binding.goToRegister.setOnClickListener(v -> {
-            navController.navigate(R.id.action_signInFragment_to_registerFragment);
-        });
+        binding.goToRegister.setOnClickListener(v -> navController.navigate(R.id.action_signInFragment_to_registerFragment));
     }
 
     ActivityResultLauncher<Intent> signInClient = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),

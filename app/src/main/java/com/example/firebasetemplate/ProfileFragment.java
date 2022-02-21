@@ -2,7 +2,6 @@ package com.example.firebasetemplate;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +30,6 @@ public class ProfileFragment extends AppFragment {
                 Glide.with(this).load(firebaseAuth.getCurrentUser().getPhotoUrl()).circleCrop().into(binding.profileImage);
                 binding.emailProf.setText(firebaseAuth.getCurrentUser().getEmail());
                 binding.nameProf.setText(firebaseAuth.getCurrentUser().getDisplayName());
-                /*navHeaderMainBinding.name.setText(firebaseAuth.getCurrentUser().getDisplayName());
-                navHeaderMainBinding.email.setText(firebaseAuth.getCurrentUser().getEmail());
-                Log.e("sdfdfs","USER:" + firebaseAuth.getCurrentUser().getEmail());*/
             }
         });
     }
