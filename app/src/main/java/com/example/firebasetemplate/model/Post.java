@@ -10,4 +10,6 @@ public class Post {
     public String postid;
     public String imageUser;
     public HashMap<String, Boolean>  likes = new HashMap<>();
+
+    //colections("posts").documetn(postid).collections("collections")
 }
